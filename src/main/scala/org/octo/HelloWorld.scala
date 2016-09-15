@@ -11,7 +11,6 @@ object HelloWorldExample {
     // only setting app name, all other properties will be specified at runtime for flexibility
     val conf = new SparkConf()
       .setAppName("octo-helloworld")
-      .set("spark.cassandra.connection.host", "127.0.0.1")
 
     val sc = new SparkContext(conf)
 
