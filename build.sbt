@@ -28,8 +28,7 @@ resolvers += "Thrift" at "http://people.apache.org/~rawson/repo/"
 
 libraryDependencies ++= Seq(
     "org.apache.hadoop" % "hadoop-core" % "1.2.1",
-    "org.apache.hbase" % "hbase" % "0.94.15" //,
-//    "it.nerdammer.bigdata" % "spark-hbase-connector_2.10" % "1.0.3"
+    "org.apache.hbase" % "hbase" % "0.94.15"
 )
 
 dependencyOverrides += "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.4"
