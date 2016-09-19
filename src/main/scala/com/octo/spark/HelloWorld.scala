@@ -1,4 +1,4 @@
-package org.octo
+package com.octo.spark
 
 import org.apache.spark._
 import com.datastax.spark.connector._
@@ -7,7 +7,7 @@ import com.datastax.spark.connector._
   * Assumes test.hello table already exists and has data, see cassandra-example.cql
   */
 object HelloWorldExample {
-  def main(args: Array[String]): Unit = {
+  def xmain(args: Array[String]): Unit = {
     // only setting app name, all other properties will be specified at runtime for flexibility
     val conf = new SparkConf()
       .setAppName("octo-helloworld")

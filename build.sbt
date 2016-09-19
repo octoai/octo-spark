@@ -1,15 +1,18 @@
 name := "octo-spark"
 
-version := "1.0"
+version := "0.0.1"
 
 organization := "octo"
 
-scalaVersion := "2.10.5"
+spName := "octo/octospark"
+
+scalaVersion := "2.11.8"
 
 sparkVersion := "2.0.0"
 
 sparkComponents += "mllib"
 
+sparkComponents ++= Seq("streaming", "sql")
 
 /*
   This dependency is for cassandra. If you are not building anything for
@@ -24,8 +27,11 @@ resolvers += "Apache HBase" at "https://repository.apache.org/content/repositori
 resolvers += "Thrift" at "http://people.apache.org/~rawson/repo/"
 
 libraryDependencies ++= Seq(
-    "org.apache.hadoop" % "hadoop-core" % "0.20.2",
-    "org.apache.hbase" % "hbase" % "0.90.4"
+    "org.apache.hadoop" % "hadoop-core" % "1.2.1",
+    "org.apache.hbase" % "hbase" % "0.94.15" //,
+//    "it.nerdammer.bigdata" % "spark-hbase-connector_2.10" % "1.0.3"
 )
 
-libraryDependencies += "it.nerdammer.bigdata" % "spark-hbase-connector_2.10" % "1.0.3"
+dependencyOverrides += "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.4"
+
+spAppendScalaVersion := true
