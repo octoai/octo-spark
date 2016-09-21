@@ -14,12 +14,9 @@ import org.apache.hadoop.hbase.mapred.TableOutputFormat
 
 import org.apache.hadoop.hbase.util.Bytes
 
-//import org.apache.hadoop.mapreduce.{JobConf, OutputFormat}
 import org.apache.hadoop.mapred.{JobConf, OutputFormat}
 
-
 import org.apache.hadoop.hbase.util.Bytes
-
 
 import org.apache.spark.mllib.recommendation.ALS
 import org.apache.spark.mllib.recommendation.MatrixFactorizationModel
