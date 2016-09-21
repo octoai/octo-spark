@@ -1,19 +1,45 @@
 import org.apache.spark._
+import org.apache.spark.rdd._
 import org.apache.hadoop._
 
-import org.apache.hadoop.hbase.client.{HBaseAdmin, Result}
+import org.apache.hadoop.hbase.client.{HBaseAdmin, Result, HTable, Get, Put}
 import org.apache.hadoop.hbase.{ HBaseConfiguration, HTableDescriptor }
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat
+
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable
 
-import org.apache.hadoop.hbase.client.{HBaseAdmin,HTable,Put,Get}
+import org.apache.hadoop.mapreduce.Job
+
+import org.apache.hadoop.hbase.mapred.TableOutputFormat
+
 import org.apache.hadoop.hbase.util.Bytes
+
+//import org.apache.hadoop.mapreduce.{JobConf, OutputFormat}
+import org.apache.hadoop.mapred.{JobConf, OutputFormat}
+
+
+import org.apache.hadoop.hbase.util.Bytes
+
 
 import org.apache.spark.mllib.recommendation.ALS
 import org.apache.spark.mllib.recommendation.MatrixFactorizationModel
 import org.apache.spark.mllib.recommendation.Rating
 
+import org.apache.hadoop.hbase.client._
+import org.apache.hadoop.hbase.util.Bytes
+import org.apache.hadoop.hbase.util.Bytes._
+
 object ProductRecommender {
+
+
+  def convert(t: (String, String, Double)) = {
+    val rowId = s"P1-${java.util.UUID.randomUUID.toString}"
+    val put = new Put(toBytes(rowId))
+    put.add(toBytes("info"), toBytes("userid"), toBytes(t._1))
+    put.add(toBytes("info"), toBytes("productid"), toBytes(t._2))
+    put.add(toBytes("info"), toBytes("score"), toBytes(t._3))
+    (new ImmutableBytesWritable, put)
+  }
 
   def main(args: Array[String]): Unit = {
 
@@ -90,8 +116,28 @@ object ProductRecommender {
 
         println("Mean Squared Error = " + MSE)
 
-        // save to hbase
-        model.save(sc, "/tmp/userproductCFModel")
+        // save the model to some filesystem
+        //model.save(sc, "/tmp/userproductCFModel")
+
+        // save the predictions to HBase
+        val connection = HConnectionManager.createConnection(conf)
+        val table = connection.getTable(tableName)
+
+        // remember we did convert the String userid and String productid
+        // to their hashcode (Int). Time to un-do it
+        val preds = predictions.map( p => (
+          new String(toBytes(p._1._1), "UTF-32"),
+          new String(toBytes(p._1._2), "UTF-32"),
+          p._2
+        ))
+
+        val jobConfig = new JobConf(conf)
+        jobConfig.set(TableOutputFormat.OUTPUT_TABLE, "product_recommendations")
+
+        jobConfig.setOutputFormat(classOf[TableOutputFormat])
+
+        new PairRDDFunctions(preds.map(convert)).saveAsHadoopDataset(jobConfig)
+
       }
     }
     sc.stop()
