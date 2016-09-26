@@ -28,7 +28,8 @@ resolvers += "Thrift" at "http://people.apache.org/~rawson/repo/"
 
 libraryDependencies ++= Seq(
     "org.apache.hadoop" % "hadoop-core" % "1.2.1",
-    "org.apache.hbase" % "hbase" % "0.94.15"
+    "org.apache.hbase" % "hbase" % "0.94.15",
+    "com.github.nscala-time" % "nscala-time_2.10" % "2.14.0"
 )
 
 dependencyOverrides += "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.4"
