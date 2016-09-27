@@ -153,12 +153,11 @@ object TimeRecommender {
 
         jobConfig.setOutputFormat(classOf[TableOutputFormat])
 
-        new PairRDDFunctions(preds.map(convert)).saveAsHadoopDataset(jobConfig)
+        //new PairRDDFunctions(preds.map(convert)).saveAsHadoopDataset(jobConfig)
 
       }
     }
-    sc.stop()
-  }
-}
+    sc.stop()}
 
+  }
 
